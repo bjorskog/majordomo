@@ -20,7 +20,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 setup(
     name='majordomo',
     version='0.1.0',
-    description='Python package for managing data using ZMQ.',
+    description='Python package for retrieving data and storing it using ZMQ.',
     long_description=readme + '\n\n' + history,
     author='Bjoern Skogtroe',
     author_email='bjorn.skogtro@gmail.com',
@@ -31,6 +31,9 @@ setup(
     package_dir={'majordomo': 'majordomo'},
     include_package_data=True,
     install_requires=[
+        'requests',
+        'pymongo',
+        'pyzmq'
     ],
     license="BSD",
     zip_safe=False,

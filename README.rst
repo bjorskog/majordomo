@@ -12,12 +12,14 @@ majordomo
         :target: https://crate.io/packages/majordomo?version=latest
 
 
-Python package for managing data using ZMQ.
+Python package for managing data using ZMQ and MongoDB.
 
 * Free software: BSD license
-* Documentation: http://majordomo.rtfd.org.
 
 Features
 --------
 
-* TODO
+* Base classes for streams, workers and commands
+* Controller for writing to MongoDB
+* Workers for obtaining data
+* Workflow objects for defining tasks, sources and dependencies

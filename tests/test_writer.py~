@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import zmq
+
+
+class TestSocket(object):
+     def __init__(self, context, sock_type):
+         self._context = context
+         self._sock = context.socket(sock_type)
+
+     def connect(self, *args, **kwargs):
+         return self._sock.connect(*args, **kwargs)
+
+     def send(self, *args, **kwargs):
+         return self._sock.send(*args, **kwargs)
+
+     def recv(self, *args, **kwargs):
+         for i in range(100):
+             try:
+                 rep = req_sock.recv(zmq.NOBLOCK)
+                 break
+             except:
+                 import time; time.sleep(0.01)
+         else:
+             raise zmq.ZMQError('Got no answer.')
+
+         return rep
+
+
+def pytest_funcarg__echo_server(request):
+     """Creates echo server instances for the test(s)."""
+     echo_server = EchoServer()
+
+     # Terminate the process when done with the test
+     def terminate():
+         echo_server.terminate()
+         echo_server.join()
+
+     request.addfinalizer(terminate)
+
+     return echo_server
+
+
+def test_echo_server(echo_server):
+     """Tests if the echo server responds properly."""
+     echo_server.start()
+     context = zmq.Context()
+     req_sock = TestSocket(context, zmq.REQ)
+     req_sock.connect('tcp://127.0.0.1:7777')
+
+     req_sock.send(b'ohai')
+
+     rep = req_sock.recv()
+     assert rep == b'ohai'
