@@ -30,6 +30,7 @@ class MongoWriter(multiprocessing.Process):
         self._db_name = db_name
         self._collection_name = collection_name
         self._socket_addr = socket_addr
+        self._connect()
         
     def _connect(self):
         self._conn = pymongo.Connection()
@@ -38,13 +39,12 @@ class MongoWriter(multiprocessing.Process):
     
     def add_document(self, doc):
         """ adds a document to the collection """
-        self._connect()
         try:
             self._collection.insert(doc)
         except Exception, e:
             return 'Caught error: %s' % e
     
-    def setup(self):
+    def _setup(self):
         """ makes the socket and loop """
         context = zmq.Context()
         self._socket = context.socket(zmq.SUB)
@@ -54,7 +54,7 @@ class MongoWriter(multiprocessing.Process):
 
     def run(self):
         """ starts the loop and starts writing """
-        self.setup()
+        self._setup()
         self._stream = ZMQStream(self._socket)
         self._stream.on_recv(self._messagehandler)
         try:
@@ -64,23 +64,14 @@ class MongoWriter(multiprocessing.Process):
 
     def _messagehandler(self, msg):
         """ code for handling a message """
-        msg = json.loads(self._doc_to_json(msg[0]))
+        msg = self._doc_to_json(msg[0])
         sender, feed_type, payload = msg[:]
         payload = json.loads(payload)
         print "Got %s from %s: %s" % (feed_type, sender, payload)
         self.add_document(payload)
         
     def _doc_to_json(self, doc):
-        return jsonapi.loads(doc)
-
-    def get_document_by_keys(self, keys):
-        """ Attempts to return a single document from database table that matches
-        each key/value in keys dictionary. """
-        print 'attempting to retrieve document using keys: %s' % keys
-        try:
-            return self._table.find_one(keys)
-        except Exception,e:
-            return 'Error: %s' % e
+        return json.loads(jsonapi.loads(doc))
 
 def main():
     db_name = 'writer'

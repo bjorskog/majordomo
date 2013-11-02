@@ -26,11 +26,11 @@ def push_messages(workernum):
             msg = json.dumps({'worker': name, 'feed': random.random(), 
                               'timestamp':str(datetime.datetime.now())})
             print "Worker %s - sending %s" % (name, msg)
-            socket.send_multipart(['data.fundamental', msg])
+            socket.send_multipart(['data.fundamental.umm', msg])
         except KeyboardInterrupt:
             print "Stopping %s..." % name
             break
-        time.sleep(random.random()/1.0)
+        time.sleep(random.random()/100.0)
 
 if __name__ == "__main__":
     if len(sys.argv)<2:

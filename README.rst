@@ -19,6 +19,11 @@ Python package for managing data using ZMQ and MongoDB.
 Features
 --------
 
+Writer that pushes all data in the incoming stream to MongoDB.
+
+Elements
+--------
+
 * Base classes for streams, workers and commands
 * Controller for writing to MongoDB
 * Workers for obtaining data
