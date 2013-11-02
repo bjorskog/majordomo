@@ -23,14 +23,13 @@ class MongoWriter(multiprocessing.Process):
     _loop = None
     _stream = None
 
-    def __init__(self, db_name, collection_name, socket_addr='tcp://127.0.0.1:5000'):
+    def __init__(self, db_name, collection_name, socket_addr='tcp://127.0.0.1:6000'):
         """ binds the subscriber socket, connects to the DB and 
         sets up the collection """
         super(MongoWriter, self).__init__()
         self._db_name = db_name
         self._collection_name = collection_name
         self._socket_addr = socket_addr
-        self.add_document({'cmd':'feed'})
         
     def _connect(self):
         self._conn = pymongo.Connection()
@@ -49,7 +48,7 @@ class MongoWriter(multiprocessing.Process):
         """ makes the socket and loop """
         context = zmq.Context()
         self._socket = context.socket(zmq.SUB)
-        self._socket.bind(self._socket_addr)
+        self._socket.connect(self._socket_addr)
         self._socket.setsockopt(zmq.SUBSCRIBE, '')
         self._loop = IOLoop.instance()
 
@@ -65,10 +64,10 @@ class MongoWriter(multiprocessing.Process):
 
     def _messagehandler(self, msg):
         """ code for handling a message """
-        #sender, message_type, payload = msg[:]
-        feed_type, payload = msg[:]
-        payload = self._doc_to_json(payload)
-        #print "Got message from %s" % sender 
+        msg = json.loads(self._doc_to_json(msg[0]))
+        sender, feed_type, payload = msg[:]
+        payload = json.loads(payload)
+        print "Got %s from %s: %s" % (feed_type, sender, payload)
         self.add_document(payload)
         
     def _doc_to_json(self, doc):
