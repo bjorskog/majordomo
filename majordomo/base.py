@@ -5,20 +5,19 @@ import abc
 import multiprocessing
 
 import zmq
-from zmq.eventloop.ioloop import IOLoop
+from zmq.eventloop.ioloop import IOLoop, PeriodicCallback
 from zmq.eventloop.zmqstream import ZMQStream
 
 from majordomo.utils import to_json
 
-#TODO: fix for general socket types
-#TODO: fix setting up of subscriptions
 #TODO: add workers running in thread-pool
 #TODO: add workers on scheduling
 #TODO: add controller for firing off workers
 
-class BaseProcessWorker(multiprocessing.Process):
+class BaseWorker(multiprocessing.Process):
     """ Template for all workers pushing data to the broker. This
-    class is for tasks needing a single process to run in """
+    class is for tasks needing a single process to run in, like
+    capturing streams on some feed """
 
     __metaclass__ = abc.ABCMeta
 
@@ -33,13 +32,13 @@ class BaseProcessWorker(multiprocessing.Process):
 
     def __init__(self, address, sock_type=None, context=None, bind=False):
         """ constructor """
-        super(BaseProcessWorker, self).__init__()
+        super(BaseWorker, self).__init__()
         self._address = address
         host, port = self._parse_address(address)
         self._host = host
         self._port = port
         if not sock_type:
-            sock_type = zmq.DEALER
+            sock_type = zmq.PUB
         self._sock_type = sock_type
         self._context = context
         self._bind = bind
