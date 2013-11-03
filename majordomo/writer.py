@@ -11,8 +11,7 @@ from zmq.utils import jsonapi
 from zmq.eventloop.ioloop import IOLoop
 from zmq.eventloop.zmqstream import ZMQStream
 
-#TODO: Add config for database, collection and socket
-#TODO: Messagehandler
+from majordomo.utils import to_json
 
 class MongoWriter(multiprocessing.Process):
     """ 
@@ -33,6 +32,7 @@ class MongoWriter(multiprocessing.Process):
         self._connect()
         
     def _connect(self):
+        """ sets up the connection with MongoDB """
         self._conn = pymongo.Connection()
         self._db = self._conn[self._db_name]
         self._collection = self._db[self._collection_name]
@@ -71,9 +71,10 @@ class MongoWriter(multiprocessing.Process):
         self.add_document(payload)
         
     def _doc_to_json(self, doc):
-        return json.loads(jsonapi.loads(doc))
+        return json.loads(to_json(doc))
 
 def main():
+    """ entry point """
     db_name = 'writer'
     collection_name = 'fundamental'
     writer = MongoWriter(db_name, collection_name)

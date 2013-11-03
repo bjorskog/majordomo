@@ -5,7 +5,7 @@ import zmq
 import json
 from zmq.utils import jsonapi
 
-to_json = lambda z: jsonapi.loads(z)
+from majordomo.utils import to_json
 
 # server side
 def get_messages():
@@ -13,8 +13,6 @@ def get_messages():
     context = zmq.Context()
     socket = context.socket(zmq.DEALER)
     socket.connect('tcp://127.0.0.1:6000')
-    #socket.bind('tcp://127.0.0.1:5000')
-    #socket.setsockopt(zmq.SUBSCRIBE, '')
 
     while True:
         try:

@@ -21,10 +21,11 @@ Features
 
 Writer that pushes all data in the incoming stream to MongoDB.
 
-Elements
+Building blocks
 --------
 
 * Base classes for streams, workers and commands
+* Broker class for doing N-N pub-sub.
 * Controller for writing to MongoDB
 * Workers for obtaining data
 * Workflow objects for defining tasks, sources and dependencies

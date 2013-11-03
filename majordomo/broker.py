@@ -9,11 +9,11 @@ from zmq.utils import jsonapi
 from zmq.eventloop.ioloop import IOLoop
 from zmq.eventloop.zmqstream import ZMQStream
 
-to_json = lambda z: jsonapi.loads(z)
+from majordomo.utils import to_json
 
 class Broker(multiprocessing.Process):
     """ pub-sub broker to provide conectivity 
-    for the publisher of data and the writer/other listeners """
+    for the publisher of data to the writer/other listeners """
 
     _insocket = None
     _outsocket = None
@@ -34,7 +34,6 @@ class Broker(multiprocessing.Process):
         self._outsocket = context.socket(zmq.DEALER)
         
         self._insocket.bind(self._in_address)
-        #self._insocket.setsockopt(zmq.SUBSCRIBE, '')
         self._outsocket.bind(self._out_address)
         
         self._loop = IOLoop.instance()
@@ -43,8 +42,6 @@ class Broker(multiprocessing.Process):
         """ starts the eventloop """
         self.setup()
         self._instream = ZMQStream(self._insocket)
-        #self._outstream = ZMQStream(self._outsocket)
-        
         self._instream.on_recv(self._messagehandler)
 
         try:
