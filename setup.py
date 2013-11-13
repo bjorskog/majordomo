@@ -4,7 +4,6 @@
 import os
 import sys
 
-
 try:
     from setuptools import setup
 except ImportError:
@@ -19,7 +18,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='majordomo',
-    version='0.1.0',
+    version='0.1.1',
     description='Python package for retrieving data and storing it using ZMQ.',
     long_description=readme + '\n\n' + history,
     author='Bjoern Skogtroe',

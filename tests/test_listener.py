@@ -5,7 +5,11 @@ import zmq
 import json
 from zmq.utils import jsonapi
 
-from majordomo.utils import to_json
+#TODO: should work
+try:
+    from majordomo.utils import to_json
+except:
+    to_json = lambda z: jsonapi.loads(z)
 
 # server side
 def get_messages():

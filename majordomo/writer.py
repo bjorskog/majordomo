@@ -11,7 +11,11 @@ from zmq.utils import jsonapi
 from zmq.eventloop.ioloop import IOLoop
 from zmq.eventloop.zmqstream import ZMQStream
 
-from majordomo.utils import to_json
+#TODO: should work
+try:
+    from majordomo.utils import to_json
+except:
+    to_json = lambda z: jsonapi.loads(z)
 
 class MongoWriter(multiprocessing.Process):
     """ 
