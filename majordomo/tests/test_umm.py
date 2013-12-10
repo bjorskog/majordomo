@@ -41,13 +41,16 @@ class TransformUmm(Task):
         pass
 
     def _run(self):
-        """ does processing """
+        """ does some processing """
         fields = ['id']
         res = {}
         for item in self.requires():
             data = item.output()
             for field in fields:
                 res[field] = data[field]
+        print ''.join('\n')
+        for item, key in res.iteritems():
+            print "%s: %s" % (item, key)
         
 class TestTask(unittest.TestCase):
     """ testing a simple task """

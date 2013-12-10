@@ -7,10 +7,9 @@ class Target(object):
     """ representation of a final destination """
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, target):
-        """ constructor """
-        super(Target, self).__init__()
-        self._target = target
+    @abc.abstractmethod
+    def exists(self):
+        pass
 
 class FileTarget(Target):
     """ interface for writing to file """
@@ -18,4 +17,8 @@ class FileTarget(Target):
 
 class MongoTarget(Target):
     """ interface for writing to MongoDB """
+    pass
+
+class ZmqTarget(Target):
+    """ interface for writing to the bus """
     pass
