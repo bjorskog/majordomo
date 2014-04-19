@@ -5,16 +5,16 @@ import multiprocessing
 import json
 
 import zmq
-from zmq.utils import jsonapi
 from zmq.eventloop.ioloop import IOLoop
 from zmq.eventloop.zmqstream import ZMQStream
 
 #TODO: add script for starting the broker to scripts section in setup
-
 #TODO: this should work
+
 try:
     from majordomo.utils import to_json
 except:
+    from zmq.utils import jsonapi
     to_json = lambda z: jsonapi.loads(z)
 
 class Broker(multiprocessing.Process):

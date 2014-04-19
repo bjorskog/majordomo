@@ -5,21 +5,22 @@ import multiprocessing
 import pymongo
 import datetime
 
-import json
 import zmq
-from zmq.utils import jsonapi
 from zmq.eventloop.ioloop import IOLoop
 from zmq.eventloop.zmqstream import ZMQStream
 
 #TODO: should work
+#TODO: add command-line arguments for starting arbitrary named writers
+#TDOD: figure out collection to write to from message and store apprpriately?
+ 
 try:
     from majordomo.utils import to_json
 except:
+    from zmq.utils import jsonapi
     to_json = lambda z: jsonapi.loads(z)
 
 class MongoWriter(multiprocessing.Process):
-    """ 
-    Process that subscribes to the message bus and writes all relevant 
+    """ Process that subscribes to the message bus and writes all relevant 
     feeds to MongoDB. """
 
     _socket = None

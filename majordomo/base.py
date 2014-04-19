@@ -17,3 +17,4 @@ class MajorDomo(object):
 class Worker(object):
     """ instance taking care of all work """
     pass
+

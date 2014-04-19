@@ -31,12 +31,17 @@ class TestSocket(object):
      def __del__(self):
           self._context.__del__
 
-def test_echo_server():
-     """Tests if the echo server responds properly."""
+def test_send_message():
+     """ Test to send to the broker."""
      context = zmq.Context()
      req_sock = TestSocket(context, zmq.PUB, "testsock")
      req_sock.connect('tcp://127.0.0.1:5000')
-     req_sock.send(['data.fundamental', json.dumps({'cmd':'feed', 'timestamp':str(datetime.datetime.now())})])
+     req_sock.send(['data.fundamental', 
+                    json.dumps({
+                         'cmd' : 'feed', 
+                         'timestamp' : str(datetime.datetime.now())
+                         })
+                    ])
 
 if __name__ == "__main__":
-     test_echo_server()
+     test_send_message()

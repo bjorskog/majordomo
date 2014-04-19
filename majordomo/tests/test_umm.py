@@ -7,6 +7,7 @@ import pprint
 
 from majordomo.task import Task
 from majordomo.target import Target
+from majordomo.messages import NewsMessage
 
 API_URI = 'http://umm.nordpoolspot.com/api/umm/message/'
 NUM = 11248
@@ -22,6 +23,7 @@ class InputUmm(Task):
         uri = API_URI + str(NUM) + '/'
         try:
             data = requests.get(uri).json()
+            pprint.pprint(data)
         except Exception as ex:
             print ex
         return data
@@ -59,6 +61,7 @@ class TestTask(unittest.TestCase):
 
     def test_transform(self):
         """ doing a simple transform """
+        print '\n'
         task = TransformUmm()
         task.run()
 
