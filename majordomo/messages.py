@@ -1,27 +1,43 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import abc
+""" Messages will be separated on the prefix, then 
+on the data type, e.g.:
+data.fundamental, data.market, data.news, cmd.trade, cmd.heartbeat, 
+cmd.price, cmd.depth, cmd.status 
 
+Look up the Nordnet API for examples of feeds.
+"""
+
+#TODO: Make passing of class initialisor easier
 #TODO: Replace classes by meta-classes?
+#TODO: Move all classes to its own module for simplicity?
+
+import json
 
 class Message(object):
     """ base class for all messages """
-    __metaclass__ = abc.ABCMeta
+    _messagetype = None
+    _payload = None
     
-    def __init__(self):
-        pass
+    def __init__(self, messagetype, payload):
+        self._messagetype = messagetype
+        self._payload = payload
+        #build the message
+        self._initialize()
 
-    @abc.abstractmethod
-    def _initialize(object):
+    def _initialize(self):
         """ builds the message """
-        pass
+        self._message = [self._messagetype, json.dumps(self._payload)]
 
-class FundamentalMessage(Message):
-    pass
+    @property
+    def messagetype(self):
+        return self._messagetype
 
-class MarketMessage(Message):
-    pass
+    @property
+    def payload(self):
+        return self._payload
 
-class NewsMessage(Message):
-    pass
+    @property
+    def message(self):
+        return self._message

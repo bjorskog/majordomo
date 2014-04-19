@@ -5,6 +5,8 @@ import zmq
 import json
 import datetime
 
+from majordomo.messages import Message
+
 class TestSocket(object):
      def __init__(self, context, sock_type, name):
          self._context = context
@@ -36,12 +38,17 @@ def test_send_message():
      context = zmq.Context()
      req_sock = TestSocket(context, zmq.PUB, "testsock")
      req_sock.connect('tcp://127.0.0.1:5000')
-     req_sock.send(['data.fundamental', 
+     """req_sock.send(['data.fundamental', 
                     json.dumps({
                          'cmd' : 'feed', 
                          'timestamp' : str(datetime.datetime.now())
                          })
-                    ])
+                    ])"""
+     message = Message('data.fundamental',{
+               'cmd' : 'feed',
+               'timestamp' : str(datetime.datetime.now())
+               })
+     req_sock.send(message.message)
 
 if __name__ == "__main__":
      test_send_message()
